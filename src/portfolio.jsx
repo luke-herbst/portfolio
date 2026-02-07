@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import emailjs from '@emailjs/browser';
 import ContactPanel from './contact';
 
 const Portfolio = () => {
   const [activePanel, setActivePanel] = useState('home');
   const [isLoaded, setIsLoaded] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     setTimeout(() => setIsLoaded(true), 100);
+    
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
+    
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   const panels = ['home', 'experience', 'projects', 'skills', 'contact', 'socials'];
@@ -40,33 +47,27 @@ const Portfolio = () => {
     {
       title: 'Book Recommender',
       description: 'A machine learning system that recommends books based on user ratings and preferred genres.',
-      link: 'https://github.com/luke-herbst/book-recommender'
+      link: 'https://github.com/luke-herbst/book-recommender',
+      tags: ['Python', 'ML', 'Data Science']
     },
     {
       title: 'Battle Boids',
       description: 'Competitive flocking simulation exploring emergent behavior and decentralized agent decision-making.',
-      link: 'https://github.com/luke-herbst/battle-boids'
+      link: 'https://github.com/luke-herbst/battle-boids',
+      tags: ['Simulation', 'AI', 'Game Dev']
     },
     {
       title: 'Delivery App',
       description: 'Android food delivery app with authentication, ordering, and real-time order tracking.',
-      link: 'https://github.com/luke-herbst/DeliveryApp'
+      link: 'https://github.com/luke-herbst/DeliveryApp',
+      tags: ['Android', 'Kotlin', 'Firebase']
     }
   ];
 
   const skills = {
     'Languages': ['Python', 'Java', 'Kotlin', 'C', 'C#', 'JavaScript', 'SQL'],
     'Frameworks & Tools': ['React', 'Android Studio', 'Firebase', 'Node.js', 'REST APIs', 'Git', 'Postman'],
-    'Concepts': [
-        'Object-Oriented Design',
-        'Unit Testing & Test-Driven Development (TDD)',
-        'Data Structures & Algorithms',
-        'Machine Learning & Neural Networks',
-        'Computer Vision',
-        'Software Design Patterns',
-        'Agile & Scrum Methodologies',
-        'RESTful API Design'
-    ]
+    'Concepts': ['Object-Oriented Design', 'Unit Testing', 'Data Structures and Algorithms', 'Machine Learning and Neural Networks', 'Computer Vision', 'Software Devesign Patterns', 'RESTful API Design', 'Agile Methodologies']
   };
 
   const socials = [
@@ -77,103 +78,108 @@ const Portfolio = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      background: '#000000',
-      color: '#00ff41',
-      fontFamily: '"Courier New", "Courier", monospace',
+      background: '#0a0a0a',
+      color: '#e5e5e5',
+      fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
       overflow: 'hidden',
       position: 'relative'
     }}>
-      {/* Matrix rain effect background */}
+      {/* Subtle ambient light */}
       <div style={{
         position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundImage: `
-          linear-gradient(rgba(0, 255, 65, 0.05) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(0, 255, 65, 0.05) 1px, transparent 1px)
-        `,
-        backgroundSize: '20px 20px',
-        animation: 'gridScroll 20s linear infinite',
-        pointerEvents: 'none'
-      }} />
-      
-      {/* Scanline effect */}
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        background: 'repeating-linear-gradient(0deg, rgba(0, 255, 65, 0.03), rgba(0, 255, 65, 0.03) 1px, transparent 1px, transparent 2px)',
+        top: '-30%',
+        right: '-15%',
+        width: '50%',
+        height: '50%',
+        background: 'radial-gradient(circle, rgba(56, 189, 248, 0.04) 0%, transparent 70%)',
         pointerEvents: 'none',
-        animation: 'scanline 8s linear infinite'
+        filter: 'blur(80px)'
+      }} />
+
+      {/* Mouse follower - very subtle */}
+      <div style={{
+        position: 'fixed',
+        left: mousePosition.x - 200,
+        top: mousePosition.y - 200,
+        width: '400px',
+        height: '400px',
+        background: 'radial-gradient(circle, rgba(56, 189, 248, 0.03) 0%, transparent 70%)',
+        borderRadius: '50%',
+        pointerEvents: 'none',
+        transition: 'all 0.5s ease',
+        filter: 'blur(60px)'
+      }} />
+
+      {/* Grain texture overlay */}
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\' opacity=\'0.03\'/%3E%3C/svg%3E")',
+        pointerEvents: 'none',
+        opacity: 0.5
       }} />
 
       {/* Navigation */}
       <nav style={{
         position: 'fixed',
-        top: '50%',
+        top: '2rem',
         right: '2rem',
-        transform: 'translateY(-50%)',
         zIndex: 1000,
         display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-        animation: isLoaded ? 'slideInRight 0.6s ease-out' : 'none'
+        gap: '0.5rem',
+        background: 'rgba(20, 20, 20, 0.8)',
+        padding: '0.5rem',
+        borderRadius: '12px',
+        backdropFilter: 'blur(20px)',
+        border: '1px solid rgba(255, 255, 255, 0.05)',
+        animation: isLoaded ? 'slideInRight 0.6s ease-out' : 'none',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)'
       }}>
-        {panels.map((panel, idx) => (
+        {panels.map((panel) => (
           <button
             key={panel}
             onClick={() => setActivePanel(panel)}
             style={{
-              background: activePanel === panel ? 'rgba(0, 255, 65, 0.2)' : 'rgba(0, 0, 0, 0.8)',
-              border: activePanel === panel ? '2px solid #00ff41' : '2px solid rgba(0, 255, 65, 0.3)',
-              borderRadius: '50%',
-              width: '50px',
-              height: '50px',
+              background: activePanel === panel ? 'rgba(56, 189, 248, 0.1)' : 'transparent',
+              border: 'none',
+              padding: '0.75rem 1.5rem',
               cursor: 'pointer',
               transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-              color: activePanel === panel ? '#00ff41' : '#008f11',
-              fontSize: '1.2rem',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backdropFilter: 'blur(10px)',
-              animationDelay: `${idx * 0.1}s`,
-              animation: isLoaded ? 'fadeIn 0.5s ease-out forwards' : 'none',
-              opacity: isLoaded ? 1 : 0,
-              transform: activePanel === panel ? 'scale(1.1)' : 'scale(1)',
-              boxShadow: activePanel === panel ? '0 0 20px rgba(0, 255, 65, 0.6), 0 0 40px rgba(0, 255, 65, 0.3)' : 'none'
+              color: activePanel === panel ? '#38bdf8' : '#737373',
+              fontSize: '0.875rem',
+              fontWeight: activePanel === panel ? '600' : '500',
+              borderRadius: '8px',
+              position: 'relative',
+              overflow: 'hidden',
+              fontFamily: 'inherit',
+              letterSpacing: '0.02em'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.15)';
-              e.currentTarget.style.background = 'rgba(0, 255, 65, 0.15)';
-              e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 255, 65, 0.5)';
+              if (activePanel !== panel) {
+                e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                e.currentTarget.style.color = '#a3a3a3';
+              }
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.transform = activePanel === panel ? 'scale(1.1)' : 'scale(1)';
-              e.currentTarget.style.background = activePanel === panel ? 'rgba(0, 255, 65, 0.2)' : 'rgba(0, 0, 0, 0.8)';
-              e.currentTarget.style.boxShadow = activePanel === panel ? '0 0 20px rgba(0, 255, 65, 0.6), 0 0 40px rgba(0, 255, 65, 0.3)' : 'none';
+              if (activePanel !== panel) {
+                e.currentTarget.style.background = 'transparent';
+                e.currentTarget.style.color = '#737373';
+              }
             }}
-            title={panel.charAt(0).toUpperCase() + panel.slice(1)}
           >
-            {panel === 'home' && '▣'}
-            {panel === 'experience' && '◉'}
-            {panel === 'projects' && '▦'}
-            {panel === 'skills' && '◈'}
-            {panel === 'contact' && '▢'}
-            {panel === 'socials' && '◎'}
+            {panel.charAt(0).toUpperCase() + panel.slice(1)}
           </button>
         ))}
       </nav>
 
       {/* Main content */}
       <div style={{
-        maxWidth: '900px',
+        maxWidth: '1100px',
         margin: '0 auto',
-        padding: '4rem 2rem',
+        padding: '6rem 2rem 4rem',
         minHeight: '100vh',
         display: 'flex',
         alignItems: 'center',
@@ -187,54 +193,107 @@ const Portfolio = () => {
             width: '100%'
           }}>
             <div style={{
-              fontSize: '5rem',
-              fontWeight: 'bold',
+              fontSize: '0.875rem',
+              color: '#737373',
               marginBottom: '1rem',
-              color: '#00ff41',
-              letterSpacing: '0.1em'
+              fontWeight: '500',
+              letterSpacing: '0.15em',
+              textTransform: 'uppercase'
             }}>
-              &gt; LUCAS_HERBST
+              Computer Science Student
             </div>
-            <div style={{
-              fontSize: '2rem',
-              color: '#008f11',
+            <h1 style={{
+              fontSize: 'clamp(3.5rem, 8vw, 6rem)',
+              fontWeight: '800',
+              marginBottom: '1.5rem',
+              color: '#fafafa',
+              lineHeight: '1',
+              letterSpacing: '-0.04em'
+            }}>
+              Lucas Herbst
+            </h1>
+            <p style={{
+              fontSize: '1.25rem',
+              color: '#a3a3a3',
               marginBottom: '3rem',
-              fontFamily: '"Courier New", monospace',
-              letterSpacing: '0.05em'
+              maxWidth: '650px',
+              lineHeight: '1.8'
             }}>
-              [ COMPUTER_SCIENCE.STUDENT @ INDIANA_UNIVERSITY ]
+              Building innovative solutions through code. Passionate about full-stack development, machine learning, and creating{' '}
+              <span style={{ 
+                color: '#38bdf8',
+                fontWeight: '600',
+                position: 'relative'
+              }}>
+                meaningful experiences
+                <span style={{
+                  position: 'absolute',
+                  bottom: '-2px',
+                  left: 0,
+                  width: '100%',
+                  height: '1px',
+                  background: '#38bdf8',
+                  opacity: 0.5
+                }} />
+              </span>.
+            </p>
+            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => setActivePanel('projects')}
+                style={{
+                  background: '#38bdf8',
+                  border: 'none',
+                  padding: '1.125rem 2.5rem',
+                  fontSize: '1rem',
+                  color: '#0a0a0a',
+                  cursor: 'pointer',
+                  borderRadius: '8px',
+                  fontFamily: 'inherit',
+                  fontWeight: '700',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 0 40px rgba(56, 189, 248, 0.3)',
+                  letterSpacing: '0.02em'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 0 60px rgba(56, 189, 248, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 0 40px rgba(56, 189, 248, 0.3)';
+                }}
+              >
+                View Projects
+              </button>
+              <button
+                onClick={() => setActivePanel('contact')}
+                style={{
+                  background: 'transparent',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  padding: '1.125rem 2.5rem',
+                  fontSize: '1rem',
+                  color: '#e5e5e5',
+                  cursor: 'pointer',
+                  borderRadius: '8px',
+                  fontFamily: 'inherit',
+                  fontWeight: '600',
+                  transition: 'all 0.3s ease',
+                  letterSpacing: '0.02em'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
+              >
+                Get In Touch
+              </button>
             </div>
-            <button
-              onClick={() => setActivePanel('experience')}
-              style={{
-                background: 'rgba(0, 0, 0, 0.8)',
-                border: '2px solid #00ff41',
-                padding: '1rem 2.5rem',
-                fontSize: '1.1rem',
-                color: '#00ff41',
-                cursor: 'pointer',
-                borderRadius: '0',
-                fontFamily: '"Courier New", monospace',
-                fontWeight: 'bold',
-                transition: 'all 0.3s ease',
-                boxShadow: '0 0 10px rgba(0, 255, 65, 0.3)',
-                position: 'relative',
-                overflow: 'hidden',
-                letterSpacing: '0.1em'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(0, 255, 65, 0.2)';
-                e.currentTarget.style.boxShadow = '0 0 20px rgba(0, 255, 65, 0.6)';
-                e.currentTarget.style.textShadow = '0 0 5px #00ff41';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)';
-                e.currentTarget.style.boxShadow = '0 0 10px rgba(0, 255, 65, 0.3)';
-                e.currentTarget.style.textShadow = 'none';
-              }}
-            >
-              ENTER_SYSTEM &gt;&gt;
-            </button>
           </div>
         )}
 
@@ -242,63 +301,85 @@ const Portfolio = () => {
         {activePanel === 'experience' && (
           <div style={{ animation: 'fadeInUp 0.8s ease-out', width: '100%' }}>
             <h2 style={{
-              fontSize: '3rem',
+              fontSize: '2.5rem',
               marginBottom: '3rem',
-              color: '#00ff41',
-              borderBottom: '3px solid rgba(0, 255, 65, 0.5)',
-              paddingBottom: '1rem',
-              textShadow: '0 0 10px rgba(0, 255, 65, 0.5)',
-              letterSpacing: '0.1em'
+              fontWeight: '800',
+              color: '#fafafa',
+              letterSpacing: '-0.02em'
             }}>
-              &gt; WORK_EXPERIENCE
+              Experience
             </h2>
             {experiences.map((exp, idx) => (
               <div key={idx} style={{
                 marginBottom: '3rem',
-                padding: '2rem',
-                background: 'rgba(0, 255, 65, 0.05)',
-                borderRadius: '0',
-                border: '1px solid rgba(0, 255, 65, 0.3)',
-                backdropFilter: 'blur(10px)',
-                transition: 'all 0.3s ease',
-                animation: `fadeInUp 0.8s ease-out ${idx * 0.2}s backwards`,
-                boxShadow: '0 0 10px rgba(0, 255, 65, 0.1)'
+                padding: '0',
+                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                animation: `fadeInUp 0.8s ease-out ${idx * 0.15}s backwards`,
+                position: 'relative'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateX(10px)';
-                e.currentTarget.style.borderColor = '#00ff41';
-                e.currentTarget.style.background = 'rgba(0, 255, 65, 0.1)';
-                e.currentTarget.style.boxShadow = '0 0 20px rgba(0, 255, 65, 0.3)';
+                const indicator = e.currentTarget.querySelector('.exp-indicator');
+                if (indicator) {
+                  indicator.style.background = '#38bdf8';
+                  indicator.style.boxShadow = '0 0 20px rgba(56, 189, 248, 0.6)';
+                }
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateX(0)';
-                e.currentTarget.style.borderColor = 'rgba(0, 255, 65, 0.3)';
-                e.currentTarget.style.background = 'rgba(0, 255, 65, 0.05)';
-                e.currentTarget.style.boxShadow = '0 0 10px rgba(0, 255, 65, 0.1)';
+                const indicator = e.currentTarget.querySelector('.exp-indicator');
+                if (indicator) {
+                  indicator.style.background = '#262626';
+                  indicator.style.boxShadow = 'none';
+                }
               }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
-                  <h3 style={{ fontSize: '1.8rem', color: '#00ff41', margin: 0 }}>{exp.company}</h3>
-                  <span style={{ color: '#008f11', fontSize: '0.9rem', fontFamily: '"Courier New", monospace' }}>{exp.dates}</span>
-                </div>
-                <p style={{ fontSize: '1.2rem', color: '#00dd35', marginBottom: '1.5rem', fontStyle: 'italic' }}>{exp.role}</p>
-                <ul style={{ listStyle: 'none', padding: 0 }}>
-                  {exp.bullets.map((bullet, bidx) => (
-                    <li key={bidx} style={{
-                      marginBottom: '1rem',
-                      paddingLeft: '1.5rem',
-                      position: 'relative',
-                      lineHeight: '1.6',
-                      color: '#00cc33'
+                {/* Vertical line indicator */}
+                <div 
+                  className="exp-indicator"
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: '0.5rem',
+                    width: '3px',
+                    height: 'calc(100% - 3rem)',
+                    background: '#262626',
+                    transition: 'all 0.3s ease'
+                  }} 
+                />
+                
+                <div style={{ paddingLeft: '2rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+                    <h3 style={{ fontSize: '1.5rem', color: '#fafafa', margin: 0, fontWeight: '700' }}>{exp.company}</h3>
+                    <span style={{ 
+                      color: '#737373', 
+                      fontSize: '0.875rem', 
+                      fontWeight: '500'
                     }}>
-                      <span style={{
-                        position: 'absolute',
-                        left: 0,
-                        color: '#00ff41'
-                      }}>&gt;</span>
-                      {bullet}
-                    </li>
-                  ))}
-                </ul>
+                      {exp.dates}
+                    </span>
+                  </div>
+                  <p style={{ fontSize: '1.125rem', color: '#a3a3a3', marginBottom: '1.5rem', fontWeight: '500' }}>{exp.role}</p>
+                  <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                    {exp.bullets.map((bullet, bidx) => (
+                      <li key={bidx} style={{
+                        marginBottom: '1rem',
+                        paddingLeft: '1.5rem',
+                        position: 'relative',
+                        lineHeight: '1.75',
+                        color: '#a3a3a3'
+                      }}>
+                        <span style={{
+                          position: 'absolute',
+                          left: 0,
+                          top: '0.6rem',
+                          width: '4px',
+                          height: '4px',
+                          borderRadius: '50%',
+                          background: '#525252'
+                        }} />
+                        {bullet}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             ))}
           </div>
@@ -308,22 +389,20 @@ const Portfolio = () => {
         {activePanel === 'projects' && (
           <div style={{ animation: 'fadeInUp 0.8s ease-out', width: '100%' }}>
             <h2 style={{
-              fontSize: '3rem',
-              marginBottom: '2rem',
-              color: '#00ff41',
-              borderBottom: '3px solid rgba(0, 255, 65, 0.5)',
-              paddingBottom: '1rem',
-              textShadow: '0 0 10px rgba(0, 255, 65, 0.5)',
-              letterSpacing: '0.1em'
+              fontSize: '2.5rem',
+              marginBottom: '1.5rem',
+              fontWeight: '800',
+              color: '#fafafa',
+              letterSpacing: '-0.02em'
             }}>
-              &gt; PROJECTS
+              Projects
             </h2>
-            <p style={{ marginBottom: '3rem', fontSize: '1.2rem', color: '#00cc33' }}>
-              // Building cool stuff. Click to view more details on GitHub.
+            <p style={{ marginBottom: '3rem', fontSize: '1.125rem', color: '#a3a3a3', lineHeight: '1.7' }}>
+              A selection of projects exploring new technologies and solving interesting problems.
             </p>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
               gap: '2rem'
             }}>
               {projects.map((project, idx) => (
@@ -336,51 +415,74 @@ const Portfolio = () => {
                     textDecoration: 'none',
                     color: 'inherit',
                     padding: '2rem',
-                    background: 'rgba(0, 255, 65, 0.05)',
-                    borderRadius: '0',
-                    border: '1px solid rgba(0, 255, 65, 0.3)',
-                    backdropFilter: 'blur(10px)',
-                    transition: 'all 0.3s ease',
-                    animation: `fadeInUp 0.8s ease-out ${idx * 0.15}s backwards`,
+                    background: 'rgba(20, 20, 20, 0.6)',
+                    borderRadius: '16px',
+                    border: '1px solid rgba(255, 255, 255, 0.05)',
+                    backdropFilter: 'blur(20px)',
+                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                    animation: `fadeInUp 0.8s ease-out ${idx * 0.1}s backwards`,
                     cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
                     position: 'relative',
-                    overflow: 'hidden',
-                    boxShadow: '0 0 10px rgba(0, 255, 65, 0.1)'
+                    overflow: 'hidden'
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-8px)';
-                    e.currentTarget.style.borderColor = '#00ff41';
-                    e.currentTarget.style.boxShadow = '0 0 30px rgba(0, 255, 65, 0.4)';
-                    e.currentTarget.style.background = 'rgba(0, 255, 65, 0.1)';
+                    e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.2)';
+                    e.currentTarget.style.background = 'rgba(20, 20, 20, 0.8)';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.transform = 'translateY(0)';
-                    e.currentTarget.style.borderColor = 'rgba(0, 255, 65, 0.3)';
-                    e.currentTarget.style.boxShadow = '0 0 10px rgba(0, 255, 65, 0.1)';
-                    e.currentTarget.style.background = 'rgba(0, 255, 65, 0.05)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                    e.currentTarget.style.background = 'rgba(20, 20, 20, 0.6)';
                   }}
                 >
                   <h3 style={{
-                    fontSize: '1.5rem',
+                    fontSize: '1.375rem',
                     marginBottom: '1rem',
-                    color: '#00ff41',
-                    letterSpacing: '0.05em'
+                    color: '#fafafa',
+                    fontWeight: '700'
                   }}>
-                    [ {project.title} ]
+                    {project.title}
                   </h3>
                   <p style={{
-                    color: '#00cc33',
-                    lineHeight: '1.6'
+                    color: '#a3a3a3',
+                    lineHeight: '1.7',
+                    marginBottom: '1.5rem',
+                    flex: 1
                   }}>
                     {project.description}
                   </p>
                   <div style={{
-                    marginTop: '1.5rem',
-                    color: '#00ff41',
-                    fontSize: '0.9rem',
-                    fontWeight: 'bold'
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '0.5rem',
+                    marginBottom: '1rem'
                   }}>
-                    &gt;&gt; View_Source
+                    {project.tags.map((tag, tidx) => (
+                      <span key={tidx} style={{
+                        padding: '0.375rem 0.875rem',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '6px',
+                        color: '#d4d4d4',
+                        fontSize: '0.75rem',
+                        fontWeight: '500'
+                      }}>
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                  <div style={{
+                    color: '#38bdf8',
+                    fontSize: '0.875rem',
+                    fontWeight: '600',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem'
+                  }}>
+                    View Project →
                   </div>
                 </a>
               ))}
@@ -392,62 +494,66 @@ const Portfolio = () => {
         {activePanel === 'skills' && (
           <div style={{ animation: 'fadeInUp 0.8s ease-out', width: '100%' }}>
             <h2 style={{
-              fontSize: '3rem',
+              fontSize: '2.5rem',
               marginBottom: '3rem',
-              color: '#00ff41',
-              borderBottom: '3px solid rgba(0, 255, 65, 0.5)',
-              paddingBottom: '1rem',
-              textShadow: '0 0 10px rgba(0, 255, 65, 0.5)',
-              letterSpacing: '0.1em'
+              fontWeight: '800',
+              color: '#fafafa',
+              letterSpacing: '-0.02em'
             }}>
-              &gt; SKILLS
+              Skills
             </h2>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
               {Object.entries(skills).map(([category, items], idx) => (
                 <div key={category} style={{
-                  animation: `fadeInUp 0.8s ease-out ${idx * 0.2}s backwards`
+                  animation: `fadeInUp 0.8s ease-out ${idx * 0.15}s backwards`
                 }}>
                   <h3 style={{
-                    fontSize: '1.5rem',
+                    fontSize: '1.25rem',
                     marginBottom: '1.5rem',
-                    color: '#00ff41',
-                    letterSpacing: '0.05em'
+                    color: '#d4d4d4',
+                    fontWeight: '600',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.75rem'
                   }}>
-                    // {category.toUpperCase()}
+                    <div style={{
+                      width: '20px',
+                      height: '2px',
+                      background: '#38bdf8'
+                    }} />
+                    {category}
                   </h3>
                   <div style={{
                     display: 'flex',
                     flexWrap: 'wrap',
-                    gap: '1rem'
+                    gap: '0.875rem'
                   }}>
                     {items.map((skill, sidx) => (
                       <span
                         key={sidx}
                         style={{
-                          padding: '0.75rem 1.5rem',
-                          background: 'rgba(0, 255, 65, 0.1)',
-                          border: '1px solid rgba(0, 255, 65, 0.4)',
-                          borderRadius: '0',
-                          color: '#00ff41',
-                          fontSize: '0.95rem',
+                          padding: '0.875rem 1.5rem',
+                          background: 'rgba(20, 20, 20, 0.6)',
+                          border: '1px solid rgba(255, 255, 255, 0.05)',
+                          borderRadius: '8px',
+                          color: '#e5e5e5',
+                          fontSize: '0.9375rem',
                           transition: 'all 0.3s ease',
                           cursor: 'default',
-                          backdropFilter: 'blur(10px)',
-                          boxShadow: '0 0 5px rgba(0, 255, 65, 0.2)'
+                          backdropFilter: 'blur(20px)',
+                          fontWeight: '500'
                         }}
                         onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'rgba(0, 255, 65, 0.2)';
-                          e.currentTarget.style.transform = 'scale(1.05)';
-                          e.currentTarget.style.borderColor = '#00ff41';
-                          e.currentTarget.style.boxShadow = '0 0 15px rgba(0, 255, 65, 0.5)';
-                          e.currentTarget.style.textShadow = '0 0 5px #00ff41';
+                          e.currentTarget.style.background = 'rgba(56, 189, 248, 0.1)';
+                          e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.3)';
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                          e.currentTarget.style.color = '#38bdf8';
                         }}
                         onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'rgba(0, 255, 65, 0.1)';
-                          e.currentTarget.style.transform = 'scale(1)';
-                          e.currentTarget.style.borderColor = 'rgba(0, 255, 65, 0.4)';
-                          e.currentTarget.style.boxShadow = '0 0 5px rgba(0, 255, 65, 0.2)';
-                          e.currentTarget.style.textShadow = 'none';
+                          e.currentTarget.style.background = 'rgba(20, 20, 20, 0.6)';
+                          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.color = '#e5e5e5';
                         }}
                       >
                         {skill}
@@ -462,25 +568,27 @@ const Portfolio = () => {
 
         {/* Contact Panel */}
         <ContactPanel activePanel={activePanel} />
-        
+
         {/* Socials Panel */}
         {activePanel === 'socials' && (
           <div style={{ animation: 'fadeInUp 0.8s ease-out', width: '100%' }}>
             <h2 style={{
-              fontSize: '3rem',
-              marginBottom: '3rem',
-              color: '#00ff41',
-              borderBottom: '3px solid rgba(0, 255, 65, 0.5)',
-              paddingBottom: '1rem',
-              textShadow: '0 0 10px rgba(0, 255, 65, 0.5)',
-              letterSpacing: '0.1em'
+              fontSize: '2.5rem',
+              marginBottom: '1.5rem',
+              fontWeight: '800',
+              color: '#fafafa',
+              letterSpacing: '-0.02em'
             }}>
-              &gt; NETWORK_LINKS
+              Connect With Me
             </h2>
+            <p style={{ marginBottom: '3rem', fontSize: '1.125rem', color: '#a3a3a3', lineHeight: '1.7' }}>
+              Find me on these platforms or check out my work.
+            </p>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-              gap: '2rem'
+              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+              gap: '2rem',
+              maxWidth: '800px'
             }}>
               {socials.map((social, idx) => (
                 <a
@@ -492,41 +600,46 @@ const Portfolio = () => {
                     textDecoration: 'none',
                     color: 'inherit',
                     padding: '3rem 2rem',
-                    background: 'rgba(0, 255, 65, 0.05)',
-                    borderRadius: '0',
-                    border: '1px solid rgba(0, 255, 65, 0.3)',
-                    backdropFilter: 'blur(10px)',
-                    transition: 'all 0.3s ease',
-                    animation: `fadeInUp 0.8s ease-out ${idx * 0.2}s backwards`,
+                    background: 'rgba(20, 20, 20, 0.6)',
+                    borderRadius: '16px',
+                    border: '1px solid rgba(255, 255, 255, 0.05)',
+                    backdropFilter: 'blur(20px)',
+                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                    animation: `fadeInUp 0.8s ease-out ${idx * 0.15}s backwards`,
                     cursor: 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     gap: '1.5rem',
-                    boxShadow: '0 0 10px rgba(0, 255, 65, 0.1)'
+                    textAlign: 'center'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.transform = 'translateY(-10px) scale(1.05)';
-                    e.currentTarget.style.borderColor = '#00ff41';
-                    e.currentTarget.style.boxShadow = '0 0 30px rgba(0, 255, 65, 0.5)';
-                    e.currentTarget.style.background = 'rgba(0, 255, 65, 0.1)';
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.2)';
+                    e.currentTarget.style.background = 'rgba(20, 20, 20, 0.8)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.transform = 'translateY(0) scale(1)';
-                    e.currentTarget.style.borderColor = 'rgba(0, 255, 65, 0.3)';
-                    e.currentTarget.style.boxShadow = '0 0 10px rgba(0, 255, 65, 0.1)';
-                    e.currentTarget.style.background = 'rgba(0, 255, 65, 0.05)';
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                    e.currentTarget.style.background = 'rgba(20, 20, 20, 0.6)';
                   }}
                 >
-                  <div style={{ fontSize: '4rem', filter: 'drop-shadow(0 0 10px #00ff41)' }}>{social.icon}</div>
+                  <div style={{ fontSize: '3rem' }}>{social.icon}</div>
                   <h3 style={{
-                    fontSize: '1.8rem',
-                    color: '#00ff41',
+                    fontSize: '1.5rem',
+                    color: '#fafafa',
                     margin: 0,
-                    letterSpacing: '0.05em'
+                    fontWeight: '700'
                   }}>
-                    [ {social.name} ]
+                    {social.name}
                   </h3>
+                  <span style={{
+                    color: '#38bdf8',
+                    fontSize: '0.875rem',
+                    fontWeight: '600'
+                  }}>
+                    Visit Profile →
+                  </span>
                 </a>
               ))}
             </div>
@@ -537,19 +650,19 @@ const Portfolio = () => {
       {/* Footer */}
       <footer style={{
         position: 'fixed',
-        bottom: '1rem',
+        bottom: '1.5rem',
         left: '50%',
         transform: 'translateX(-50%)',
-        color: '#008f11',
-        fontSize: '0.85rem',
+        color: '#525252',
+        fontSize: '0.875rem',
         zIndex: 1000,
         textAlign: 'center'
       }}>
-        &gt; LUCAS_HERBST_© 2025
+        © 2025 Lucas Herbst
       </footer>
 
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
         
         * {
           margin: 0;
@@ -557,10 +670,15 @@ const Portfolio = () => {
           box-sizing: border-box;
         }
 
+        body {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
         @keyframes fadeIn {
           from {
             opacity: 0;
-            transform: scale(0.8);
+            transform: scale(0.95);
           }
           to {
             opacity: 1;
@@ -571,7 +689,7 @@ const Portfolio = () => {
         @keyframes fadeInUp {
           from {
             opacity: 0;
-            transform: translateY(40px);
+            transform: translateY(30px);
           }
           to {
             opacity: 1;
@@ -582,48 +700,34 @@ const Portfolio = () => {
         @keyframes slideInRight {
           from {
             opacity: 0;
-            transform: translateX(50px) translateY(-50%);
+            transform: translateX(30px);
           }
           to {
             opacity: 1;
-            transform: translateX(0) translateY(-50%);
-          }
-        }
-
-        @keyframes glowPulse {
-          0%, 100% {
-            text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
-          }
-          50% {
-            text-shadow: 0 0 20px #00ff41, 0 0 30px #00ff41, 0 0 40px #00ff41, 0 0 50px #00ff41;
-          }
-        }
-
-        @keyframes gridScroll {
-          0% {
-            transform: translateY(0);
-          }
-          100% {
-            transform: translateY(20px);
-          }
-        }
-
-        @keyframes scanline {
-          0% {
-            transform: translateY(-100%);
-          }
-          100% {
-            transform: translateY(100%);
+            transform: translateX(0);
           }
         }
 
         ::placeholder {
-          color: #008f11;
+          color: #525252;
         }
 
         ::selection {
-          background: rgba(0, 255, 65, 0.3);
-          color: #00ff41;
+          background: rgba(56, 189, 248, 0.2);
+          color: #38bdf8;
+        }
+
+        @media (max-width: 768px) {
+          nav {
+            top: auto !important;
+            bottom: 1rem !important;
+            left: 50% !important;
+            right: auto !important;
+            transform: translateX(-50%) !important;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 90%;
+          }
         }
       `}</style>
     </div>

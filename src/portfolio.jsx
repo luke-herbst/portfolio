@@ -17,7 +17,7 @@ const Portfolio = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const panels = ['home', 'experience', 'projects', 'skills', 'contact', 'socials'];
+  const panels = ['home', 'experience', 'projects', 'education', 'skills', 'contact', 'socials'];
 
   const experiences = [
     {
@@ -40,6 +40,19 @@ const Portfolio = () => {
         'Analyzed AI performance on diverse programming challenges, identifying inefficiencies and recommending targeted optimizations.',
         'Performed rigorous quality assurance checks to enhance model accuracy and overall output reliability.'
       ]
+    }
+  ];
+
+  const education = [
+    {
+      company: 'M.S. in Computer Science',
+      role: 'Indiana University Bloomington',
+      dates: 'January 2026 — May 2027'
+    },
+    {
+      company: 'B.S. in Computer Science',
+      role: 'Indiana University Bloomington',
+      dates: 'September 2022 — May 2026'
     }
   ];
 
@@ -487,6 +500,73 @@ const Portfolio = () => {
                 </a>
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Education Panel */}
+        {activePanel === 'education' && (
+          <div style={{ animation: 'fadeInUp 0.8s ease-out', width: '100%' }}>
+            <h2 style={{
+              fontSize: '2.5rem',
+              marginBottom: '3rem',
+              fontWeight: '800',
+              color: '#fafafa',
+              letterSpacing: '-0.02em'
+            }}>
+              Education
+            </h2>
+            {education.map((exp, idx) => (
+              <div key={idx} style={{
+                marginBottom: '3rem',
+                padding: '0',
+                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                animation: `fadeInUp 0.8s ease-out ${idx * 0.15}s backwards`,
+                position: 'relative'
+              }}
+              onMouseEnter={(e) => {
+                const indicator = e.currentTarget.querySelector('.exp-indicator');
+                if (indicator) {
+                  indicator.style.background = '#38bdf8';
+                  indicator.style.boxShadow = '0 0 20px rgba(56, 189, 248, 0.6)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                const indicator = e.currentTarget.querySelector('.exp-indicator');
+                if (indicator) {
+                  indicator.style.background = '#262626';
+                  indicator.style.boxShadow = 'none';
+                }
+              }}>
+                {/* Vertical line indicator */}
+                <div 
+                  className="exp-indicator"
+                  style={{
+                    position: 'absolute',
+                    left: 0,
+                    top: '0.5rem',
+                    width: '3px',
+                    height: 'calc(100% - 3rem)',
+                    background: '#262626',
+                    transition: 'all 0.3s ease'
+                  }} 
+                />
+                
+                <div style={{ paddingLeft: '2rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+                    <h3 style={{ fontSize: '1.5rem', color: '#fafafa', margin: 0, fontWeight: '700' }}>{exp.company}</h3>
+                    <span style={{ 
+                      color: '#737373', 
+                      fontSize: '0.875rem', 
+                      fontWeight: '500'
+                    }}>
+                      {exp.dates}
+                    </span>
+                  </div>
+                  <p style={{ fontSize: '1.125rem', color: '#a3a3a3', marginBottom: '1.5rem', fontWeight: '500' }}>{exp.role}</p>
+                  
+                </div>
+              </div>
+            ))}
           </div>
         )}
 

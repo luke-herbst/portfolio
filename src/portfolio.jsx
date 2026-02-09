@@ -45,13 +45,13 @@ const Portfolio = () => {
 
   const education = [
     {
-      company: 'M.S. in Computer Science',
-      role: 'Indiana University Bloomington',
+      degree: 'M.S. in Computer Science',
+      college: 'Indiana University Bloomington',
       dates: 'January 2026 — May 2027'
     },
     {
-      company: 'B.S. in Computer Science',
-      role: 'Indiana University Bloomington',
+      degree: 'B.S. in Computer Science',
+      college: 'Indiana University Bloomington',
       dates: 'September 2022 — May 2026'
     }
   ];
@@ -553,7 +553,7 @@ const Portfolio = () => {
                 
                 <div style={{ paddingLeft: '2rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-                    <h3 style={{ fontSize: '1.5rem', color: '#fafafa', margin: 0, fontWeight: '700' }}>{exp.company}</h3>
+                    <h3 style={{ fontSize: '1.5rem', color: '#fafafa', margin: 0, fontWeight: '700' }}>{exp.degree}</h3>
                     <span style={{ 
                       color: '#737373', 
                       fontSize: '0.875rem', 
@@ -562,7 +562,7 @@ const Portfolio = () => {
                       {exp.dates}
                     </span>
                   </div>
-                  <p style={{ fontSize: '1.125rem', color: '#a3a3a3', marginBottom: '1.5rem', fontWeight: '500' }}>{exp.role}</p>
+                  <p style={{ fontSize: '1.125rem', color: '#a3a3a3', marginBottom: '1.5rem', fontWeight: '500' }}>{exp.college}</p>
                   
                 </div>
               </div>

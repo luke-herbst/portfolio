@@ -79,7 +79,7 @@ const Portfolio = () => {
 
   const skills = {
     'Languages': ['Python', 'Java', 'Kotlin', 'C', 'C#', 'JavaScript', 'SQL'],
-    'Frameworks & Tools': ['React', 'Android Studio', 'Firebase', 'Node.js', 'REST APIs', 'Git', 'Postman'],
+    'Frameworks & Tools': ['React', 'Android Studio', 'Firebase', 'Node.js', 'REST APIs', 'Git', 'Postman', 'SSMS'],
     'Concepts': ['Object-Oriented Design', 'Unit Testing', 'Data Structures and Algorithms', 'Machine Learning and Neural Networks', 'Computer Vision', 'Software Devesign Patterns', 'RESTful API Design', 'Agile Methodologies']
   };
 

@@ -1,10 +1,92 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, act } from 'react';
 import ContactPanel from './contact';
 
 const Portfolio = () => {
   const [activePanel, setActivePanel] = useState('home');
   const [isLoaded, setIsLoaded] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const canvasRef = useRef(null);
+
+  // Animated thread background
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const particleCount = 50;
+    const connectionDistance = 150;
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * 0.5;
+        this.vy = (Math.random() - 0.5) * 0.5;
+        this.radius = 1;
+      }
+
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+      }
+
+      draw() {
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.3)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push(new Particle());
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((particle, i) => {
+        particle.update();
+        particle.draw();
+
+        // Draw connections
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[j].x - particle.x;
+          const dy = particles[j].y - particle.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < connectionDistance) {
+            const opacity = (1 - distance / connectionDistance) * 0.15;
+            ctx.strokeStyle = `rgba(56, 189, 248, ${opacity})`;
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(particle.x, particle.y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      });
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     setTimeout(() => setIsLoaded(true), 100);
@@ -17,7 +99,20 @@ const Portfolio = () => {
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  const panels = ['home', 'experience', 'projects', 'education', 'skills', 'contact', 'socials'];
+  const panels = ['home', 'experience', 'education', 'projects', 'skills', 'contact', 'socials'];
+
+  const education = [
+    {
+      degree: 'M.S. in Computer Science',
+      college: 'Indiana University Bloomington',
+      dates: 'January 2026 — May 2027'
+    },
+    {
+      degree: 'B.S. in Computer Science',
+      college: 'Indiana University Bloomington',
+      dates: 'September 2022 — May 2026'
+    }
+  ];
 
   const experiences = [
     {
@@ -40,19 +135,6 @@ const Portfolio = () => {
         'Analyzed AI performance on diverse programming challenges, identifying inefficiencies and recommending targeted optimizations.',
         'Performed rigorous quality assurance checks to enhance model accuracy and overall output reliability.'
       ]
-    }
-  ];
-
-  const education = [
-    {
-      degree: 'M.S. in Computer Science',
-      college: 'Indiana University Bloomington',
-      dates: 'January 2026 — May 2027'
-    },
-    {
-      degree: 'B.S. in Computer Science',
-      college: 'Indiana University Bloomington',
-      dates: 'September 2022 — May 2026'
     }
   ];
 
@@ -79,8 +161,8 @@ const Portfolio = () => {
 
   const skills = {
     'Languages': ['Python', 'Java', 'Kotlin', 'C', 'C#', 'JavaScript', 'SQL'],
-    'Frameworks & Tools': ['React', 'Android Studio', 'Firebase', 'Node.js', 'REST APIs', 'Git', 'Postman', 'SSMS'],
-    'Concepts': ['Object-Oriented Design', 'Unit Testing', 'Data Structures and Algorithms', 'Machine Learning and Neural Networks', 'Computer Vision', 'Software Devesign Patterns', 'RESTful API Design', 'Agile Methodologies']
+    'Frameworks & Tools': ['React', 'Android Studio', 'Firebase', 'Node.js', 'REST APIs', 'Git', 'Postman'],
+    'Concepts': ['Object-Oriented Design', 'Unit Testing', 'Data Structures', 'Machine Learning', 'Computer Vision']
   };
 
   const socials = [
@@ -97,6 +179,20 @@ const Portfolio = () => {
       overflow: 'hidden',
       position: 'relative'
     }}>
+      {/* Animated thread canvas background */}
+      <canvas
+        ref={canvasRef}
+        style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          zIndex: 0
+        }}
+      />
+
       {/* Subtle ambient light */}
       <div style={{
         position: 'fixed',
@@ -106,7 +202,8 @@ const Portfolio = () => {
         height: '50%',
         background: 'radial-gradient(circle, rgba(56, 189, 248, 0.04) 0%, transparent 70%)',
         pointerEvents: 'none',
-        filter: 'blur(80px)'
+        filter: 'blur(80px)',
+        zIndex: 0
       }} />
 
       {/* Mouse follower - very subtle */}
@@ -120,23 +217,12 @@ const Portfolio = () => {
         borderRadius: '50%',
         pointerEvents: 'none',
         transition: 'all 0.5s ease',
-        filter: 'blur(60px)'
+        filter: 'blur(60px)',
+        zIndex: 0
       }} />
 
-      {/* Grain texture overlay */}
-      <div style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 400 400\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.9\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\' opacity=\'0.03\'/%3E%3C/svg%3E")',
-        pointerEvents: 'none',
-        opacity: 0.5
-      }} />
-
-      {/* Navigation */}
-      <nav style={{
+      {/* Navigation - mobile optimized */}
+      <nav className="main-nav" style={{
         position: 'fixed',
         top: '2rem',
         right: '2rem',
@@ -155,6 +241,7 @@ const Portfolio = () => {
           <button
             key={panel}
             onClick={() => setActivePanel(panel)}
+            className="nav-button"
             style={{
               background: activePanel === panel ? 'rgba(56, 189, 248, 0.1)' : 'transparent',
               border: 'none',
@@ -398,6 +485,141 @@ const Portfolio = () => {
           </div>
         )}
 
+        {/* Education Panel */}
+        {activePanel === 'education' && (
+          <div style={{ animation: 'fadeInUp 0.8s ease-out', width: '100%' }}>
+            <h2 style={{
+              fontSize: '2.5rem',
+              marginBottom: '3rem',
+              fontWeight: '800',
+              color: '#fafafa',
+              letterSpacing: '-0.02em'
+            }}>
+              Education
+            </h2>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '2rem'
+            }}>
+              {education.map((edu, idx) => (
+                <div 
+                  key={idx} 
+                  style={{
+                    padding: '2.5rem',
+                    background: 'rgba(20, 20, 20, 0.6)',
+                    borderRadius: '16px',
+                    border: '1px solid rgba(255, 255, 255, 0.05)',
+                    backdropFilter: 'blur(20px)',
+                    transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
+                    animation: `fadeInUp 0.8s ease-out ${idx * 0.15}s backwards`,
+                    position: 'relative',
+                    overflow: 'hidden'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-8px)';
+                    e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.3)';
+                    e.currentTarget.style.background = 'rgba(20, 20, 20, 0.8)';
+                    const accent = e.currentTarget.querySelector('.edu-accent');
+                    if (accent) accent.style.width = '100%';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
+                    e.currentTarget.style.background = 'rgba(20, 20, 20, 0.6)';
+                    const accent = e.currentTarget.querySelector('.edu-accent');
+                    if (accent) accent.style.width = '60px';
+                  }}
+                >
+                  {/* Animated accent line */}
+                  <div 
+                    className="edu-accent"
+                    style={{
+                      position: 'absolute',
+                      top: 0,
+                      left: 0,
+                      height: '3px',
+                      width: '60px',
+                      background: 'linear-gradient(90deg, #38bdf8 0%, rgba(56, 189, 248, 0.2) 100%)',
+                      transition: 'width 0.4s ease',
+                      borderRadius: '0 0 3px 0'
+                    }}
+                  />
+
+                  {/* Degree icon/badge */}
+                  <div style={{
+                    width: '48px',
+                    height: '48px',
+                    background: 'rgba(56, 189, 248, 0.1)',
+                    borderRadius: '12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginBottom: '1.5rem',
+                    border: '1px solid rgba(56, 189, 248, 0.2)'
+                  }}>
+                    <span style={{ fontSize: '1.5rem' }}>🎓</span>
+                  </div>
+
+                  <h3 style={{
+                    fontSize: '1.5rem',
+                    color: '#fafafa',
+                    marginBottom: '0.75rem',
+                    fontWeight: '700'
+                  }}>
+                    {edu.degree}
+                  </h3>
+                  
+                  <p style={{
+                    fontSize: '1.125rem',
+                    color: '#38bdf8',
+                    marginBottom: '1rem',
+                    fontWeight: '600'
+                  }}>
+                    {edu.college}
+                  </p>
+
+                  <div style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    color: '#737373',
+                    fontSize: '0.9375rem',
+                    fontWeight: '500'
+                  }}>
+                    <span style={{
+                      width: '4px',
+                      height: '4px',
+                      borderRadius: '50%',
+                      background: '#525252'
+                    }} />
+                    {edu.dates}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Optional: Add a note about current status */}
+            <div style={{
+              marginTop: '2.5rem',
+              padding: '1.5rem',
+              background: 'rgba(56, 189, 248, 0.05)',
+              border: '1px solid rgba(56, 189, 248, 0.1)',
+              borderRadius: '12px',
+              animation: 'fadeInUp 0.8s ease-out 0.3s backwards'
+            }}>
+              <p style={{
+                color: '#a3a3a3',
+                fontSize: '0.9375rem',
+                lineHeight: '1.6',
+                margin: 0
+              }}>
+                <span style={{ color: '#38bdf8', fontWeight: '600' }}>Currently pursuing</span> a Master's degree while maintaining a strong foundation in computer science fundamentals.
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Projects Panel */}
         {activePanel === 'projects' && (
           <div style={{ animation: 'fadeInUp 0.8s ease-out', width: '100%' }}>
@@ -415,7 +637,7 @@ const Portfolio = () => {
             </p>
             <div style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
               gap: '2rem'
             }}>
               {projects.map((project, idx) => (
@@ -500,73 +722,6 @@ const Portfolio = () => {
                 </a>
               ))}
             </div>
-          </div>
-        )}
-
-        {/* Education Panel */}
-        {activePanel === 'education' && (
-          <div style={{ animation: 'fadeInUp 0.8s ease-out', width: '100%' }}>
-            <h2 style={{
-              fontSize: '2.5rem',
-              marginBottom: '3rem',
-              fontWeight: '800',
-              color: '#fafafa',
-              letterSpacing: '-0.02em'
-            }}>
-              Education
-            </h2>
-            {education.map((exp, idx) => (
-              <div key={idx} style={{
-                marginBottom: '3rem',
-                padding: '0',
-                transition: 'all 0.4s cubic-bezier(0.4, 0, 0.2, 1)',
-                animation: `fadeInUp 0.8s ease-out ${idx * 0.15}s backwards`,
-                position: 'relative'
-              }}
-              onMouseEnter={(e) => {
-                const indicator = e.currentTarget.querySelector('.exp-indicator');
-                if (indicator) {
-                  indicator.style.background = '#38bdf8';
-                  indicator.style.boxShadow = '0 0 20px rgba(56, 189, 248, 0.6)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                const indicator = e.currentTarget.querySelector('.exp-indicator');
-                if (indicator) {
-                  indicator.style.background = '#262626';
-                  indicator.style.boxShadow = 'none';
-                }
-              }}>
-                {/* Vertical line indicator */}
-                <div 
-                  className="exp-indicator"
-                  style={{
-                    position: 'absolute',
-                    left: 0,
-                    top: '0.5rem',
-                    width: '3px',
-                    height: 'calc(100% - 3rem)',
-                    background: '#262626',
-                    transition: 'all 0.3s ease'
-                  }} 
-                />
-                
-                <div style={{ paddingLeft: '2rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '0.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-                    <h3 style={{ fontSize: '1.5rem', color: '#fafafa', margin: 0, fontWeight: '700' }}>{exp.degree}</h3>
-                    <span style={{ 
-                      color: '#737373', 
-                      fontSize: '0.875rem', 
-                      fontWeight: '500'
-                    }}>
-                      {exp.dates}
-                    </span>
-                  </div>
-                  <p style={{ fontSize: '1.125rem', color: '#a3a3a3', marginBottom: '1.5rem', fontWeight: '500' }}>{exp.college}</p>
-                  
-                </div>
-              </div>
-            ))}
           </div>
         )}
 
@@ -797,16 +952,40 @@ const Portfolio = () => {
           color: #38bdf8;
         }
 
+        /* Mobile optimizations */
         @media (max-width: 768px) {
-          nav {
+          .main-nav {
             top: auto !important;
             bottom: 1rem !important;
-            left: 50% !important;
-            right: auto !important;
-            transform: translateX(-50%) !important;
+            left: 1rem !important;
+            right: 1rem !important;
             flex-wrap: wrap;
             justify-content: center;
-            max-width: 90%;
+            padding: 0.75rem !important;
+          }
+
+          .nav-button {
+            padding: 0.625rem 1rem !important;
+            font-size: 0.8125rem !important;
+          }
+
+          .form-row {
+            grid-template-columns: 1fr !important;
+          }
+
+          h1 {
+            font-size: clamp(2.5rem, 12vw, 4rem) !important;
+          }
+
+          h2 {
+            font-size: 2rem !important;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .nav-button {
+            padding: 0.5rem 0.875rem !important;
+            font-size: 0.75rem !important;
           }
         }
       `}</style>

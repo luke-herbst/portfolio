@@ -2,6 +2,9 @@
 
 Live site: https://lucasherbst.com
 
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/4594a800-9186-4ec3-95ed-ca178d79d030" />
+
+
 ## Tech Stack
 
 - React

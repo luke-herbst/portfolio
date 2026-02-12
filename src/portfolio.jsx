@@ -152,6 +152,12 @@ const Portfolio = () => {
       tags: ['Simulation', 'AI', 'Game Dev']
     },
     {
+      title: 'Portfolio Website',
+      description: 'A responsive portfolio website built with React and styled-components.',
+      link: 'https://github.com/luke-herbst/portfolio',
+      tags: ['React', 'JavaScript', 'CSS']
+    },
+    {
       title: 'Delivery App',
       description: 'Android food delivery app with authentication, ordering, and real-time order tracking.',
       link: 'https://github.com/luke-herbst/DeliveryApp',

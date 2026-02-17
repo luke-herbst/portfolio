@@ -38,7 +38,7 @@ const Portfolio = () => {
       }
 
       draw() {
-        ctx.fillStyle = 'rgba(56, 189, 248, 0.3)';
+        ctx.fillStyle = 'rgba(56, 191, 248, 0.5)';
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
         ctx.fill();

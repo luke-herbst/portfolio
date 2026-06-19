@@ -154,7 +154,7 @@ const Portfolio = () => {
       title: 'Slate Reader',
       description: 'AI-powered desktop application that automatically organizes film production footage by extracting slate metadata and sorting clips into structured project folders.',
       link: 'https://github.com/luke-herbst/slatereader-app',
-      tags: ['Python', 'CComputer Vision', 'React']
+      tags: ['Python', 'Computer Vision', 'React']
     },
     {
       title: 'Book Recommender',

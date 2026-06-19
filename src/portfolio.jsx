@@ -116,6 +116,17 @@ const Portfolio = () => {
 
   const experiences = [
     {
+      company: 'Cox Automotive',
+      role: 'Software Engineer Intern',
+      dates: 'May 2026 — August 2026',
+      bullets: [
+        'Fixed audit key propagation issue in dbt pipeline using recursive SQL-based chain traversal, correcting 15.5K+ ghost-key assignments and restoring idempotency in a critical bridge model.',
+        'Strengthened reliability across 9 downstream models spanning staging, raw vault, and business vault layers.',
+        'Validated large-scale data pipelines using EXCEPT queries and hash comparisons across 22 models with 1B+ row datasets, ensuring production-grade accuracy of analytics outputs.',
+        'Participated in AI transformation initiative leveraging spec-driven development to standardize workflows and enable seamless transitions across engineering teams.'
+      ]
+    },
+    {
       company: 'Allied Solutions',
       role: 'Software Engineer Intern',
       dates: 'May 2025 — August 2025',
@@ -139,6 +150,12 @@ const Portfolio = () => {
   ];
 
   const projects = [
+    {
+      title: 'Slate Reader',
+      description: 'AI-powered desktop application that automatically organizes film production footage by extracting slate metadata and sorting clips into structured project folders.',
+      link: 'https://github.com/luke-herbst/slatereader-app',
+      tags: ['Python', 'CComputer Vision', 'React']
+    },
     {
       title: 'Book Recommender',
       description: 'A machine learning system that recommends books based on user ratings and preferred genres.',
